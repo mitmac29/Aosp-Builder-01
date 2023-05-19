@@ -2,14 +2,14 @@ env:
     MANIFEST: https://github.com/RisingTechOSS/android -b thirteen -g default,-mips,-darwin,-notdefault
     DEVICE: RMX2020
     OEM: realme
-    DT_LINK: https://github.com/RintoKhan02/device_realme_RMX2020.git
+    DT_LINK: https://github.com/SatoruGojo2k23/device_realme_RMX2020-1.git
     DT_PATH: device/$OEM/$DEVICE
     VT_LINK: https://github.com/SatoruGojo2k23/vendor_realme_RMX2020.git
     VT_PATH: vendor/$OEM/$DEVICE
     VTI_LINK: https://github.com/SatoruGojo2k23/vendor_realme_RMX2020-ims.git
     VTI_PATH: vendor/realme/RMX2020-ims
-    CL_LINK: https://github.com/SatoruGojo2k23/android_prebuilts_clang_host_linux-x86_clang-r437112.git
-    CL_PATH: prebuilts/clang/host/linux/clang-r437112
+    CL_LINK: https://github.com/SatoruGojo2k23/proton-clang.git
+    CL_PATH: prebuilts/clang/host/linux/clang-proton
     SE_LINK: https://github.com/SatoruGojo2k23/device_mediatek_sepolicy_vndr.git
     SE_PATH: device/mediatek/sepolicy_vndr
     KT_LINK: https://github.com/SatoruGojo2k23/kernel_realme_RMX2020.git
