@@ -25,8 +25,8 @@ task:
   timeout_in: 240m  
   container:
       image: ubuntu:20.04
-      cpu: 4
-      memory: 16G
+      cpu: 44
+      memory: 120G
       
   Build-Env-Setup_script:
        - export DEBIAN_FRONTEND=noninteractive
@@ -58,7 +58,7 @@ task:
       - mkdir -p ~/work
       - cd ~/work
       - repo init --depth=1 -u $MANIFEST
-      - repo sync -j4 --force-sync --no-tags --no-clone-bundle
+      - repo sync -j8 --force-sync --no-tags --no-clone-bundle
       - git clone --depth=1 $DT_LINK $DT_PATH
       - git clone --depth=1 $VT_LINK $VT_PATH
       - git clone --depth=1 $VTI_LINK $VTI_PATH
