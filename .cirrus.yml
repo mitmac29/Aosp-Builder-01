@@ -1,0 +1,100 @@
+env:
+    MANIFEST: https://github.com/RisingTechOSS/android -b thirteen -g default,-mips,-darwin,-notdefault
+    DEVICE: RMX2020
+    OEM: realme
+    DT_LINK: https://github.com/RintoKhan02/device_realme_RMX2020.git
+    DT_PATH: device/$OEM/$DEVICE
+    VT_LINK: https://github.com/SatoruGojo2k23/vendor_realme_RMX2020.git
+    VT_PATH: vendor/$OEM/$DEVICE
+    VTI_LINK: https://github.com/SatoruGojo2k23/vendor_realme_RMX2020-ims.git
+    VTI_PATH: vendor/realme/RMX2020-ims
+    CL_LINK: https://github.com/SatoruGojo2k23/android_prebuilts_clang_host_linux-x86_clang-r437112.git
+    CL_PATH: prebuilts/clang/host/linux/clang-r437112
+    SE_LINK: https://github.com/SatoruGojo2k23/device_mediatek_sepolicy_vndr.git
+    SE_PATH: device/mediatek/sepolicy_vndr
+    KT_LINK: https://github.com/SatoruGojo2k23/kernel_realme_RMX2020.git
+    PLATFORM: mt6768
+    KT_PATH: kernel/$OEM/$DEVICE
+    TARGET: bacon
+    LUNCH_COMBO: lineage_${DEVICE}-userdebug
+    OUTPUT: risingOS*.zip
+
+task:
+  name: "Setting Up, Syncing, Building and Uploading..."
+  timeout_in: 240m  
+  container:
+      image: ubuntu:20.04
+      cpu: 4
+      memory: 16G
+      
+  Build-Env-Setup_script:
+       - export DEBIAN_FRONTEND=noninteractive
+       - apt update
+       - apt install sudo
+       - DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
+       - ln -sf /usr/share/zoneinfo/Asia/Dhaka /etc/localtime
+       - apt-get install -y tzdata
+       - dpkg-reconfigure --frontend noninteractive tzdata
+       - sudo apt update -y && sudo apt install git aria2 curl wget rsync zip unzip lzma cpio ccache clang -y
+       - sudo apt install python3 -y
+       - sudo ln -sf /usr/bin/python3 /usr/bin/python
+       - git config --global user.name "SatoruGojo"
+       - git config --global user.email "satorugojo4200@gmail.com"
+       - git clone https://github.com/akhilnarang/scripts.git ~/scripts
+       - cd ~/scripts
+       - sudo bash setup/android_build_env.sh
+       - cd ~
+  
+  Storage-Checker_script:
+      - df -h
+      - lsblk
+      - ls -l -a -h
+  
+  Sync_script:
+      - echo "============================"
+      - echo "Syncing The Sources..."
+      - echo "============================"
+      - mkdir -p ~/work
+      - cd ~/work
+      - repo init --depth=1 --no-repo-verify -u $MANIFEST
+      - repo sync -c --no-clone-bundle --optimized-fetch --prune --force-sync -j$(nproc --all)
+      - git clone --depth=1 $DT_LINK $DT_PATH
+      - git clone --depth=1 $VT_LINK $VT_PATH
+      - git clone --depth=1 $VTI_LINK $VTI_PATH
+      - git clone --depth=1 $CL_LINK $CL_PATH
+      - git clone --depth=1 $SE_LINK $SE_PATH
+      - git clone --depth=1 $KT_LINK $KT_PATH
+      - echo "============================"
+      - echo "Syncing Complete!"
+      - echo "============================"
+
+  Build_script:
+      - echo "============================"
+      - echo "Starting the Build..."
+      - echo "============================"
+      - cd ~/work
+      - export USE_CCACHE=1
+      - export CCACHE_EXEC=/usr/bin/ccache
+      - ccache -M 50G
+      - . build/envsetup.sh
+      - lunch lineage_RMX2020-userdebug
+      - brunch RMX2020
+     
+  Upload_script:
+      - echo "============================"
+      - echo "Uploading the Build..."
+      - echo "============================"
+      - cd ~/work
+      - cd out/target/product/"$DEVICE"
+      - ls -lh
+      - pwd
+      - chmod 777 *
+      - curl --upload-file $(echo $OUTPUT) https://transfer.sh | tee link.txt && echo " "
+      - echo " "
+      - echo "============================"
+      - echo "Build Uploaded!"
+      - echo "Please see the link Below-  "
+      - echo "----------------------------"
+      - cat link.txt && echo " "
+      - echo "============================"
+        
