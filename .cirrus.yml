@@ -62,7 +62,7 @@ task:
       - ccache -M 50G
       - . build/envsetup.sh
       - lunch "$LUNCH_COMBO"
-      - mka -j31 $TARGET
+      - brunch RMX2020
      
   Upload_script:
       - echo "============================"
