@@ -16,6 +16,7 @@ env:
     PLATFORM: mt6768
     KT_PATH: kernel/$OEM/$DEVICE
     TARGET: bacon
+    EXTRA_CMD: export SKIP_ABI_CHECKS=true
     LUNCH_COMBO: lineage_${DEVICE}-userdebug
     OUTPUT: risingOS*.zip
 
@@ -56,8 +57,8 @@ task:
       - echo "============================"
       - mkdir -p ~/work
       - cd ~/work
-      - repo init --depth=1 --no-repo-verify -u $MANIFEST
-      - repo sync -c --no-clone-bundle --optimized-fetch --prune --force-sync -j$(nproc --all)
+      - repo init --depth=1 -u $MANIFEST
+      - repo sync -j4 --force-sync --no-tags --no-clone-bundle
       - git clone --depth=1 $DT_LINK $DT_PATH
       - git clone --depth=1 $VT_LINK $VT_PATH
       - git clone --depth=1 $VTI_LINK $VTI_PATH
@@ -73,12 +74,13 @@ task:
       - echo "Starting the Build..."
       - echo "============================"
       - cd ~/work
+      - $EXTRA_CMD
       - export USE_CCACHE=1
       - export CCACHE_EXEC=/usr/bin/ccache
       - ccache -M 50G
       - . build/envsetup.sh
-      - lunch lineage_RMX2020-userdebug
-      - brunch RMX2020
+      - lunch "$LUNCH_COMBO"
+      - mka -j31 $TARGET
      
   Upload_script:
       - echo "============================"
