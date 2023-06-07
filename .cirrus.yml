@@ -1,24 +1,18 @@
 env:
-    MANIFEST: https://github.com/RisingTechOSS/android -b thirteen -g default,-mips,-darwin,-notdefault
+    MANIFEST: https://github.com/LineageOS/android.git -b lineage-18.1 --git-lfs -g default,-mips,-darwin,-notdefault
     DEVICE: RMX2020
     OEM: realme
-    DT_LINK: https://github.com/SatoruGojo2k23/device_realme_RMX2020-1.git
+    DT_LINK: https://github.com/SatoruGojo2k23/a11_device_realme_RMX2020.git
     DT_PATH: device/$OEM/$DEVICE
-    VT_LINK: https://github.com/SatoruGojo2k23/vendor_realme_RMX2020.git
+    VT_LINK: https://github.com/SatoruGojo2k23/a11_vendor_realme_RMX2020.git
     VT_PATH: vendor/$OEM/$DEVICE
-    VTI_LINK: https://github.com/SatoruGojo2k23/vendor_realme_RMX2020-ims.git
-    VTI_PATH: vendor/realme/RMX2020-ims
-    CL_LINK: https://github.com/SatoruGojo2k23/proton-clang.git
-    CL_PATH: prebuilts/clang/host/linux/clang-proton
-    SE_LINK: https://github.com/SatoruGojo2k23/device_mediatek_sepolicy_vndr.git
-    SE_PATH: device/mediatek/sepolicy_vndr
-    KT_LINK: https://github.com/SatoruGojo2k23/kernel_realme_RMX2020.git
+    KT_LINK: https://github.com/SatoruGojo2k23/a11_kernel_realme_RMX2020.git
     PLATFORM: mt6768
     KT_PATH: kernel/$OEM/$DEVICE
     TARGET: bacon
     EXTRA_CMD: export SKIP_ABI_CHECKS=true
     LUNCH_COMBO: lineage_${DEVICE}-userdebug
-    OUTPUT: risingOS*.zip
+    OUTPUT: lineageos*.zip
 
 task:
   name: "Setting Up, Syncing, Building and Uploading..."
@@ -42,11 +36,15 @@ task:
       - repo init --depth=1 -u $MANIFEST
       - repo sync -j8 --force-sync --no-tags --no-clone-bundle
       - git clone --depth=1 $DT_LINK $DT_PATH
-      - git clone --depth=1 $VT_LINK $VT_PATH
-      - git clone --depth=1 $VTI_LINK $VTI_PATH
-      - git clone --depth=1 $CL_LINK $CL_PATH
-      - git clone --depth=1 $SE_LINK $SE_PATH
       - git clone --depth=1 $KT_LINK $KT_PATH
+      - git clone --depth=1 $VT_LINK $VT_PATH
+      - git clone --depth=1 https://github.com/Realme-G70-Series/android_packages_apps_RealmeParts -b lineage-18.1 packages/apps/RealmeParts
+      - git clone --depth=1 https://github.com/Realme-G70-Series/android_packages_apps_RealmeDirac -b lineage-18.1 packages/apps/RealmeDirac
+      - echo "============================"
+      - echo "Adding Patches!"
+      - echo "============================"
+      - cd external/selinux && git fetch https://github.com/PixelExperience/external_selinux eleven && git cherry-pick 9d6ebe89430ffe0aeeb156f572b2a810f9dc98cc && cd ../..
+      - cd frameworks/av && git fetch https://github.com/phhusson/platform_frameworks_av android-11.0.0_r48-phh && git cherry-pick f0830faec98e65d4a03dba9b57b0cb2fd178e8f3 && cd ../..
       - echo "============================"
       - echo "Syncing Complete!"
       - echo "============================"
