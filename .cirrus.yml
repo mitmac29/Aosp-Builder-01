@@ -1,24 +1,22 @@
 env:
-    MANIFEST: https://github.com/RisingTechOSS/android -b fourteen --git-lfs -g default,-mips,-darwin,-notdefault
-    DEVICE: RMX2020
-    OEM: realme
-    DT_LINK: https://github.com/Rinto02/androi_device_realme_RMX2020 -b fourteen
+    MANIFEST: https://github.com/crdroidandroid/android.git -b 11.0
+    DEVICE: lavender
+    OEM: xiaomi
+    DT_LINK: https://github.com/mitmac29/device_xiaomi_lavender1.git -b 11
     DT_PATH: device/$OEM/$DEVICE
-    VT_LINK: https://github.com/PixelOS-Devices/vendor_realme_RMX2020 -b fourteen
+    VT_LINK: https://github.com/mitmac29/vendor_xiaomi_lavender1.git -b 11
     VT_PATH: vendor/$OEM/$DEVICE
-    VTI_LINK: https://github.com/PixelOS-Devices/vendor_realme_RMX2020-ims -b fourteen
-    VTI_PATH: vendor/$OEM/RMX2020-ims
-    HW_LINK: https://github.com/lineageOS/android_hardware_mediatek.git -b lineage-21
-    HW_PATH: hardware/mediatek
-    SE_LINK: https://github.com/Rinto02/android_device_mediatek_sepolicy_vndr -b 14.0
-    SE_PATH: device/mediatek/sepolicy_vndr
-    KT_LINK: https://github.com/PixelOS-Devices/kernel_realme_RMX2020 -b fourteen
-    PLATFORM: mt6768
-    KT_PATH: kernel/$OEM/$DEVICE
+    KT_LINK: https://github.com/mitmac29/kernel_xiaomi_lavender.git -b qti-oldcam
+    PLATFORM: lavender
+    KT_PATH: kernel/$OEM/lavender
+    VP_LINK: https://github.com/mitmac29/packages_apps_ViPER4AndroidFX.git -b main
+    VP_PATH: packages/apps/ViPER4AndroidFX
+    CL_LINK: https://gitlab.com/sanjeevstunner/clang-r450784d.git
+    CL_PATH: prebuilts/clang/host/linux-x86/clang-r450784d
     TARGET: bacon
     EXTRA_CMD: export SKIP_ABI_CHECKS=true
-    LUNCH_COMBO: lineage_${DEVICE}-ap2a-user
-    OUTPUT: RisingOS*.zip
+    LUNCH_COMBO: lineage_${DEVICE}-userdebug
+    OUTPUT: crDroidAndroid*.zip
 
 task:
   name: "Setting Up, Syncing, Building and Uploading..."
@@ -64,8 +62,8 @@ task:
       - export CCACHE_EXEC=/usr/bin/ccache
       - ccache -M 50G
       - . build/envsetup.sh
-      - lunch "$LUNCH_COMBO"
-      - riseup RMX2020 user
+      - lunch "$LUNCH_COMBOO"
+      - mka -j31 $TARGET
      
   Upload_script:
       - echo "============================"
